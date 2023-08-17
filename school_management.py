@@ -12,22 +12,21 @@ cursor = connection.cursor()
 try:
     table_name = "student_management"
 
-    cursor.execute(f"""
-        CREATE TABLE IF NOT EXISTS {table_name} (
-            teacher_id SERIAL PRIMARY KEY,
-            teacher_name VARCHAR(255),
-            teacher_age INT,
-            teacher_subject VARCHAR(255),
-            teacher_position VARCHAR(255),
-            teacher_salary DECIMAL(10, 2),
-            teacher_contact BIGINT,
-            teacher_address VARCHAR(1000)
-        );
-    """)
+    cursor.execute(f"DROP TABLE IF EXISTS {table_name};")  # Drop the table if it exists
     connection.commit()
 
-    print(f"Table '{table_name}' created")
-
+    cursor.execute(f"""
+        CREATE TABLE {table_name} (
+            unique_id SERIAL PRIMARY KEY,
+            student_id VARCHAR(255) UNIQUE,
+            student_name VARCHAR(255),
+            student_age INT,
+            student_course VARCHAR(255),
+            student_group VARCHAR(255),
+            student_address VARCHAR(1000),
+            student_contact BIGINT
+        );
+    """)
     connection.commit()
 
     print(f"Table '{table_name}' created")
@@ -44,17 +43,18 @@ try:
             student_id = input("Enter student's ID: ")
             name = input("Enter student's name: ")
             age = input("Enter student's age: ")
-            contact = input("Enter student's contact number: ")
+            course = input("Enter student's course: ")
+            group = input("Enter student's 12th STD group: ")
             address = input("Enter student's address: ")
-            group = input("Enter student's group: ")
+            contact = input("Enter student's contact number: ")
 
             insert_query = f"""
-                INSERT INTO {table_name} (student_id, student_name, student_age, student_contact, student_address, student_group)
-                VALUES (%s, %s, %s, %s, %s, %s);
+                INSERT INTO {table_name} (student_id, student_name, student_age, student_course, student_group, student_address, student_contact)
+                VALUES (%s, %s, %s, %s, %s, %s, %s);
             """
-            data_values = (student_id, name, age, contact, address, group)
+            data_values = (student_id, name, age, course, group, address, contact)
 
-            cursor.execute(insert_query, data_values)  # Use data_values tuple here
+            cursor.execute(insert_query, data_values)
             connection.commit()
             print("Data inserted successfully")
 
@@ -159,8 +159,6 @@ try:
             print("Exiting the program")
             break
 
-        else:
-            print("Invalid choice, please select again")
 
 except Exception as e:
     print("Error:", e)
