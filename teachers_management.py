@@ -1,12 +1,4 @@
-import psycopg2
 
-# Establish the database connection and cursor
-connection = psycopg2.connect(
-    dbname="Gokulnath",
-    user="postgres",
-    password="gokul",
-    host="localhost",
-    port="5432"
 )
 cursor = connection.cursor()
 
